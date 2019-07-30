@@ -2,8 +2,6 @@
 # --coding:utf-8--
 
 import requests
-from requests.adapters import HTTPAdapter
-
 from lxml import etree
 import re
 from urllib.parse import urlparse
