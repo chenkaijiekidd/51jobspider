@@ -10,12 +10,15 @@ import csv
 
 DOMAIN = "jobs.51job.com"
 current_page = 1            #当前页数
-req_url = 'https://search.51job.com/list/030200,000000,0000,00,9,99,python,2,{0}.html?lang=c&stype=&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&providesalary=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
+req_url = 'https://search.51job.com/list/030200,000000,0000,00,9,99,{0},2,{1}.html?lang=c&stype=&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&providesalary=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
 total_page = float('inf')   #定义无限大
 has_next_page = True
+key_word = 'python'
 
 session = requests.Session()
 session.keep_alive = False
+
+
 
 headers = {
     "Host": "search.51job.com",
@@ -31,10 +34,10 @@ headers = {
 
 def start_crawl():
 
-    global current_page, total_page, req_url, session
+    global current_page, total_page, req_url, session, key_word
 
     #res = requests.get(req_url.format(current_page), headers=headers)
-    res = session.get(req_url.format(current_page), headers=headers)
+    res = session.get(req_url.format(key_word, current_page), headers=headers)
     res.encoding = 'gbk'
     html = etree.HTML(res.text)
 
