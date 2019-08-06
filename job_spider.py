@@ -26,7 +26,9 @@ location_dict = {'北京': '010000',
 location_num = location_dict[location]
 DOMAIN = "jobs.51job.com"
 current_page = 1            #当前页数
-req_url = 'https://search.51job.com/list/{0},000000,0000,00,9,99,{1},2,{2}.html?lang=c&stype=&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&providesalary=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
+req_url = 'https://search.51job.com/list/{0},000000,0000,00,9,99,{1},2,{2}.html?lang=c&stype=&postchannel=0000&' \
+          'workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&providesalary=99&lonlat=0%2C0&radius=-1&' \
+          'ord_field=0&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
 total_page = float('inf')   #定义无限大
 has_next_page = True
 
@@ -63,9 +65,11 @@ def start_crawl():
 
         row = []
         #职位名称
-        row.append(item.xpath("./p/span/a/text()")[0].strip())
+        #row.append(item.xpath("./p/span/a/text()")[0].strip()) #获取超链接文本
+        row.append(item.xpath("./p/span/a/@title")[0]) #获取title属性
         #公司名称
-        row.append(item.xpath("./span[@class='t2']/a/text()")[0].strip())
+        #row.append(item.xpath("./span[@class='t2']/a/text()")[0].strip()) #获取超链接文本
+        row.append(item.xpath("./span[@class='t2']/a/@title")[0]) #获取title属性
         #地区
         area = item.xpath("./span[@class='t3']/text()")[0].strip()
         if '-' in area:
@@ -119,7 +123,7 @@ def start_crawl():
 
 
 def get_personal_requirement(url):
-    '''获取个人要求：学历，工作经验相关'''
+    """获取个人要求：学历，工作经验相关"""
     print('crawling personal url:', url)
     #res = requests.get(url, headers=headers)
     res = session.get(url, headers=headers)
@@ -131,7 +135,7 @@ def get_personal_requirement(url):
 
 
 def get_company_info(url):
-    '''获取公司信息：公司性质，人数，行业'''
+    """获取公司信息：公司性质，人数，行业"""
     print('crawling company url:', url)
     #res = requests.get(url, headers=headers)
     res = session.get(url, headers=headers)
@@ -144,20 +148,20 @@ def get_company_info(url):
 
 
 def get_total_page(html):
-    '''根据页面信息，返回总共有多少页面'''
+    """根据页面信息，返回总共有多少页面"""
     global total_page
     result = html.xpath("//div[@class='dw_page']//div[@class='p_in']/span[@class='td'][1]/text()")
     total_page = int(re.findall(r"\d+\.?\d*", result[0])[0])
 
 
 def has_next_page():
-    '''查看是否还有下一个页面'''
+    """查看是否还有下一个页面"""
     global current_page, total_page
     return True if current_page <= total_page else False
 
 
 def transfer_salary(salary_str):
-    '''转换薪酬'''
+    """转换薪酬"""
     salary_num = float(re.findall(r"\d+\.?\d*", salary_str)[0])
     if '/' in salary_str:
         if '月' in salary_str and '千' in salary_str:
