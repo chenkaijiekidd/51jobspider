@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+@Time : 2019-08-12 11:24
+@Author : kidd
+@Site : http://www.bwaiedu.com/
+@File : test.py
+@公众号: 蓝鲸AI教育 bwaiedu
+"""
+
 from pyecharts import options as opts
 from pyecharts.charts import Geo, Map
 from pyecharts.globals import ChartType, SymbolType
